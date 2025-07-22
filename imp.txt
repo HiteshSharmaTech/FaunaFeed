@@ -1,0 +1,39 @@
+main color : #146826
+#1F4721
+#DFFFD5
+#D4EFFF
+#C8D595
+#CEDDD1
+#0A575E
+
+<Card
+      image={"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSr_oSm7qHSE-5rENE5sCmOfq6cFQV2bCVmyp0AoE3fksr7eH3Uv5C9LFGWO1egoIUveMFx8M0ffXKxJOEyKRMBAGq24Be7jwtaPbBxj7QC"}
+      title={"Tiger Conservation"}
+      description={"This is description"}
+      tag={"Species"}
+      size="md"
+      orientation="vert"
+      date={Date.now()}
+    />
+
+<Card
+      image={"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSr_oSm7qHSE-5rENE5sCmOfq6cFQV2bCVmyp0AoE3fksr7eH3Uv5C9LFGWO1egoIUveMFx8M0ffXKxJOEyKRMBAGq24Be7jwtaPbBxj7QC"}
+      title={"Tiger Conservation"}
+      description={"This is description"}
+      tag={"Species"}
+      size="sm"
+      orientation="vert"
+      date={Date.now()}
+    />
+
+<Card
+      image={"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSr_oSm7qHSE-5rENE5sCmOfq6cFQV2bCVmyp0AoE3fksr7eH3Uv5C9LFGWO1egoIUveMFx8M0ffXKxJOEyKRMBAGq24Be7jwtaPbBxj7QC"}
+      title={"Tiger Conservation"}
+      description={"This is description"}
+      tag={"Species"}
+      size="hsm"
+      orientation="horiz"
+      date={Date.now()}
+    />
+
+#eaf6ec
