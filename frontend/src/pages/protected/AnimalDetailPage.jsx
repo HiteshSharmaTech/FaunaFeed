@@ -9,7 +9,7 @@ export default function AnimalDetailPage() {
   const params = useParams();
   const [animalData, setAnimalData] = useState({});
   useEffect(() => {
-    dispatch(getAnimal(params.id)).then((data) => {
+    dispatch(getAnimal(params.blogSlug)).then((data) => {
       if (data) setAnimalData(data);
     });
   }, [dispatch]);

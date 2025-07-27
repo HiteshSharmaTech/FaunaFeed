@@ -6,6 +6,8 @@ import {
   deleteAnimalBlog,
   getAnimalBlog,
   getAllAnimalBlogs,
+  changeLikeCount,
+  changeViewCount,
 } from "../controllers/animal.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
@@ -15,10 +17,12 @@ router.use(verifyJWT);
 
 router.route("/animals").get(getAllAnimalBlogs);
 router
-  .route("/animals/:id")
+  .route("/animals/:blogSlug")
   .get(getAnimalBlog)
-  .patch(editAnimalBlog)
+  .patch(upload.single("imageFile"), editAnimalBlog)
   .delete(deleteAnimalBlog);
+router.route("/animals/:blogSlug/like").post(changeLikeCount);
+router.route("/animals/:blogSlug/view").post(changeViewCount);
 router.route("/animals/new").post(upload.single("imageFile"), createAnimalBlog);
 
 export default router;

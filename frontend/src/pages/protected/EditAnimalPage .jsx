@@ -174,6 +174,7 @@ export default function AnimalForm({ post }) {
                         "No special characters allowed",
                     },
                   })}
+                  
                   id="title"
                   name="title"
                   type="text"

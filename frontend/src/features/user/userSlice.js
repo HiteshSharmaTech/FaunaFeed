@@ -1,15 +1,27 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 export const loginUser = createAsyncThunk(
   "user/loginuser",
   async (credentials, thunkAPI) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_APP_URI}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-      });
-      if (!res.ok) {
+      // const res = await fetch(`${import.meta.env.VITE_APP_URI}/users/login`, {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(credentials),
+      // });
+      const res = await axios.post(
+        `${import.meta.env.VITE_APP_URI}/users/login`,
+        { credentials },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!res) {
         const error = await res.json();
         return thunkAPI.rejectWithValue(error.message || "Login failed");
       }
@@ -29,12 +41,17 @@ export const registerUser = createAsyncThunk(
   "user/signupuser",
   async (credentials, thunkAPI) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_APP_URI}/auth/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-      });
-      if (!res.ok) {
+      // const res = await fetch(`${import.meta.env.VITE_APP_URI}/auth/signup`, {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(credentials),
+      // });
+      const res = await axios.post(
+        `${import.meta.env.VITE_APP_URI}/auth/signup`,
+        credentials,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      if (!res) {
         const error = await res.json();
         return thunkAPI.rejectWithValue(error.message || "Login failed");
       }
@@ -46,23 +63,21 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const verifyAuth = createAsyncThunk(
-  "user/verifyAuth",
+export const fetchUser = createAsyncThunk(
+  "users/fetch",
   async (_, thunkAPI) => {
-    const token = localStorage.getItem("authToken");
-    if (!token) return thunkAPI.rejectWithValue("No token found");
-
     try {
-      const res = await fetch(`${import.meta.env.VITE_APP_URI}/auth/verify`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error("Invalid token");
-
-      const user = await res.json();
-      return { user, token };
+      const res = await axios.get(
+        `${import.meta.env.VITE_APP_URI}/users/current-user`
+      );
+      if (!res) {
+        return thunkAPI.rejectWithValue(
+          error.message || "Error while getting user"
+        );
+      }
+      return res.data;
     } catch (error) {
-      localStorage.removeItem("authToken");
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(error.message || "Fetching error");
     }
   }
 );
@@ -102,9 +117,9 @@ const userSlice = createSlice({
         state.registrationStatus = "succeeded";
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-        state.registrationStatus = 'failed'
+        state.loading = false;
+        state.error = action.payload;
+        state.registrationStatus = "failed";
       })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
@@ -120,13 +135,11 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(verifyAuth.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.user = action.payload;
       });
   },
 });
 
-export const { logoutUser , clearRegistrationStatus } = userSlice.actions;
+export const { logoutUser, clearRegistrationStatus } = userSlice.actions;
 export default userSlice.reducer;

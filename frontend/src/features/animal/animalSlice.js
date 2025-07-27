@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 // Get all animals cards
 export const fetchAnimals = createAsyncThunk(
@@ -15,29 +16,37 @@ export const addAnimal = createAsyncThunk(
   "animals/addAnimal",
   async (animalData, thunkAPI) => {
     const token = thunkAPI.getState().user.token;
-    const res = await fetch(`${import.meta.env.VITE_API_URI}/animals/new`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: animalData,
-    });
-    if (!res.ok) throw new Error("An error occured while adding animal");
-    return await res.json();
+    // const res = await fetch(`${import.meta.env.VITE_API_URI}/animals/new`, {
+    //   method: "POST",
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    //   body: animalData,
+    // });
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URI}/animals/new`,
+      animalData,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    if (!res) throw new Error("An error occured while adding animal");
+    return await res.data;
   }
 );
 
 // Get animal card
 export const getAnimal = createAsyncThunk(
   "animals/getAnimal",
-  async (id, thunkAPI) => {
+  async (blogSlug, thunkAPI) => {
     const token = thunkAPI.getState().user.token;
-    const res = await fetch(`${import.meta.env.VITE_API_URI}/animals/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URI}/animals/${blogSlug}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return await res.json();
   }
 );
@@ -45,15 +54,18 @@ export const getAnimal = createAsyncThunk(
 // Update animal
 export const updateAnimal = createAsyncThunk(
   "animals/updateAnimal",
-  async ({ id, updatedData }, thunkAPI) => {
+  async ({ blogSlug, updatedData }, thunkAPI) => {
     const token = thunkAPI.getState().user.token;
-    const res = await fetch(`${import.meta.env.VITE_API_URI}/animals/${id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: updatedData,
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URI}/animals/${blogSlug}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: updatedData,
+      }
+    );
     if (!res.ok) throw new Error("Failed to update animal");
     return await res.json();
   }
@@ -62,16 +74,19 @@ export const updateAnimal = createAsyncThunk(
 // Delete animal
 export const deleteAnimal = createAsyncThunk(
   "animals/deleteAnimal",
-  async (id, thunkAPI) => {
+  async (blogSlug, thunkAPI) => {
     const token = thunkAPI.getState().user.token;
-    const res = await fetch(`${import.meta.env.VITE_API_URI}/animals/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URI}/animals/${blogSlug}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (!res.ok) throw new Error("Failed to delete animal");
-    return id;
+    return blogSlug;
   }
 );
 
@@ -80,7 +95,7 @@ const animalSlice = createSlice({
   initialState: {
     animals: [
       {
-        id: 1,
+        blogSlug: 1,
         title: "Tiger Conservation",
         description: "This article is related to tiger conservation",
         tags: ["mammal", "carnivore"],
@@ -88,23 +103,23 @@ const animalSlice = createSlice({
           "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSr_oSm7qHSE-5rENE5sCmOfq6cFQV2bCVmyp0AoE3fksr7eH3Uv5C9LFGWO1egoIUveMFx8M0ffXKxJOEyKRMBAGq24Be7jwtaPbBxj7QC",
       },
       {
-        id: 2,
+        blogSlug: 2,
         title: "Alligator Conservation",
         description: "This article is related to alligator conservation",
         tags: ["reptile", "carnivore"],
         imageFile:
-          "https://media.istockphoto.com/id/174673392/photo/alligator-smiley.webp?a=1&b=1&s=612x612&w=0&k=20&c=M3r0WnpxQw0QKCSZY9peeLq1ql0ipurzlpJR0Tfr-BQ=",
+          "https://media.istockphoto.com/blogSlug/174673392/photo/alligator-smiley.webp?a=1&b=1&s=612x612&w=0&k=20&c=M3r0WnpxQw0QKCSZY9peeLq1ql0ipurzlpJR0Tfr-BQ=",
       },
       {
-        id: 3,
+        blogSlug: 3,
         title: "Bear Conservation",
         description: "This article is related to bear conservation",
         tags: ["mammal", "omnivore"],
         imageFile:
-          "https://images.unsplash.com/photo-1568162603664-fcd658421851?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YmVhcnxlbnwwfHwwfHx8MA%3D%3D",
+          "https://images.unsplash.com/photo-1568162603664-fcd658421851?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixblogSlug=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YmVhcnxlbnwwfHwwfHx8MA%3D%3D",
       },
       {
-        id:4,
+        blogSlug: 4,
         title: "African Elephant",
         description:
           "The African elephant is the largest living terrestrial animal and is found throughout sub-Saharan Africa. These magnificent creatures are known for their intelligence, strong family bonds, and complex social structures. They play a crucial role in their ecosystem by creating water holes used by other wildlife and dispersing seeds through their dung. African elephants have large ears shaped like the African continent, which help them regulate body temperature in the hot climate. Their trunks contain over 40,000 muscles and are used for communication, feeding, drinking, and showing affection. Sadly, these gentle giants face threats from poaching for their ivory tusks and habitat loss due to human encroachment.",
@@ -135,13 +150,18 @@ const animalSlice = createSlice({
       })
       .addCase(updateAnimal.fulfilled, (state, action) => {
         const index = state.animals.findIndex(
-          (a) => a._id === action.payload._id
+          (a) => a.blogSlug === action.payload.blogSlug
         );
         if (index !== -1) state.animals[index] = action.payload;
       })
       .addCase(deleteAnimal.fulfilled, (state, action) => {
-        state.animals = state.animals.filter((a) => a._id !== action.payload);
-      });
+        state.animals = state.animals.filter(
+          (a) => a.blogSlug !== action.payload
+        );
+      })
+      .addCase(getAnimal.fulfilled, (state, action) => {
+        state.animals = state.animals.find(value => value.blogSlug === action.payload.slug)
+      })
   },
 });
 

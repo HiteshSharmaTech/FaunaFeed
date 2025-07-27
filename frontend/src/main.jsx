@@ -24,16 +24,6 @@ import AuthLayout from "./components/Layout/AuthLayout.jsx";
 import { store } from "./features/store.js";
 import ProtectedRoute from "./utils/ProtectedRoute.jsx";
 import { Provider , useDispatch} from "react-redux";
-import { useEffect } from "react";
-import { verifyAuth } from "./features/user/userSlice.js";
-
-function AuthInitializer() {
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(verifyAuth())
-  },[dispatch])
-  return null
-}
 
 const router = createBrowserRouter(createRoutesFromElements([
   <Route element={<RootLayout/>} errorElement={<ErrorPage/>}>
@@ -67,7 +57,6 @@ const router = createBrowserRouter(createRoutesFromElements([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <AuthInitializer/>
       <RouterProvider router={router} />
     </Provider>
   </StrictMode>

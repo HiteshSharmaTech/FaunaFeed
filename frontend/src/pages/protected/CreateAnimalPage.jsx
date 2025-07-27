@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
 import { X, Plus, CheckCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { getAnimal } from "../../features/animal/animalSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function AnimalForm() {
   const predefinedTags = [
@@ -23,6 +26,9 @@ export default function AnimalForm() {
     "terrestrial",
     "aerial",
   ];
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -92,6 +98,10 @@ export default function AnimalForm() {
 
     try {
       // Api call for submitting
+      dispatch(getAnimal(formData)).then((data) => {
+        if (data) setAnimalData(data);
+        navigate(`/animals/${data.slug}`);
+      });
 
       setSubmitSuccess(true);
 
@@ -106,7 +116,7 @@ export default function AnimalForm() {
     }
   };
 
-  console.log(errors.title)
+  console.log(errors.title);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
